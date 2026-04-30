@@ -19,24 +19,20 @@ export async function POST(req: NextRequest) {
     },
   })
 
-  const emailBody = [
-    'New Pre-Call Intake Submission',
-    '===============================',
-    '',
-    'Email:           ' + email,
-    'Business Name:   ' + businessName,
-    'Website:         ' + (website || '(not provided)'),
-    'Industry:        ' + industry,
-    'Marketing Spend: ' + marketingSpend,
-    'Challenge:       ' + challenge,
-    'Timeline:        ' + timeline,
-    '',
-    'Submitted: ' + new Date().toLocaleString('en-AU', { timeZone: 'Australia/Sydney' }),
-  ].join('
-')
+  const nl = String.fromCharCode(10)
+  const emailBody = 'New Pre-Call Intake Submission' + nl
+    + '===============================' + nl + nl
+    + 'Email:           ' + email + nl
+    + 'Business Name:   ' + businessName + nl
+    + 'Website:         ' + (website || '(not provided)') + nl
+    + 'Industry:        ' + industry + nl
+    + 'Marketing Spend: ' + marketingSpend + nl
+    + 'Challenge:       ' + challenge + nl
+    + 'Timeline:        ' + timeline + nl + nl
+    + 'Submitted:       ' + new Date().toLocaleString('en-AU', { timeZone: 'Australia/Sydney' })
 
   await transporter.sendMail({
-    from: '"MarketingAI Intake" <getmarketingai@gmail.com>',
+    from: 'MarketingAI Intake <getmarketingai@gmail.com>',
     to: 'getmarketingai@gmail.com',
     subject: 'New intake: ' + businessName + ' - ' + timeline,
     text: emailBody,
@@ -49,11 +45,11 @@ export async function POST(req: NextRequest) {
       body: new URLSearchParams({
         'fields[email]': email,
         'fields[name]': businessName,
-        'ml_submit': '1',
-        'anticsrf': 'true',
+        ml_submit: '1',
+        anticsrf: 'true',
       }).toString(),
     })
-  } catch (e) { /* MailerLite failure is non-fatal */ }
+  } catch (_e) { /* MailerLite failure is non-fatal */ }
 
   return NextResponse.json({ ok: true })
 }
