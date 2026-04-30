@@ -1,0 +1,5 @@
+{
+  "env": {
+    "GMAIL_APP_PASSWORD": "@gmail_app_password"
+  }
+}
